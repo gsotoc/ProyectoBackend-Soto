@@ -50,7 +50,7 @@ app.use(cartExists);
 app.use(addCartToLocals);
 
 // Vistas
-app.use('/', productsRouter);
+app.use('/products', productsRouter);
 app.use('/realtimeproducts', productsRouter);
 app.use('/carts', cartsRouter);
 
@@ -58,5 +58,5 @@ app.use('/carts', cartsRouter);
 webSockets(io, productManager);
 
 server.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}/products`);
 });

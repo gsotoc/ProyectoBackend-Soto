@@ -12,7 +12,7 @@ export const get = async (req, res) => {
       sort, 
       query,
       available,
-      baseUrl: "/" 
+      baseUrl: "/products" 
     });
 
     res.render('home', {
