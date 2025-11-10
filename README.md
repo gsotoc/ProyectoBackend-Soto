@@ -11,7 +11,7 @@ Este proyecto es una aplicación backend construida con **Node.js**, utilizando 
 
 1. **Clona el repositorio**
    ```bash
-   git clone https://github.com/gsotoc/ProyectoBackend1-Soto.git
+   git clone https://github.com/gsotoc/ProyectoBackend-Soto.git
    cd ProyectoBackend1-Soto
    ```
 
