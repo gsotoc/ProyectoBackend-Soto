@@ -1,4 +1,4 @@
-# ProyectoBackend1-Soto
+# ProyectoBackend-Soto
 
 Este proyecto es una aplicación backend construida con **Node.js**, utilizando **Express**, **Handlebars** para las vistas y **Socket.io** para la comunicación en tiempo real.
 
