@@ -85,3 +85,39 @@ Este proyecto es una aplicación backend construida con **Node.js**, utilizando 
 
 Al trabajar con websockets para agregar un producto todos los campos del formulario son requeridos, para actualizar un producto unicamente es requerido el ID del producto y puedes ajustar cualquiera de los campos, si dejas alguno vacío no se cambiará (no se puede cambiar el ID) y por último para eliminar un producto es necesario que ingreses el ID del mismo.
 
+
+**ENTREGA 1 - Proyecto Backend II**
+
+Para comprobar que register, login y current funciona será necesario usar Postman ya que aún no ajusté las vistas.
+
+Para registrar un usuario en postman debemos hacer una petición POST a la siguente ruta http://localhost:PORT/api/sessions/register
+
+En el body debemos ingresar un usuario con los siguientes campos:
+
+{
+  "first_name": "valor_nombre",
+  "last_name": "valor_apellido",
+  "email": "valor_email",
+  "age": valor_edad,
+  "password": "valor_password"
+}
+
+Para loggear un usuario previamente registrado debemos hacer una petición POST a la siguiente ruta http://localhost:PORT/api/sessions/login
+
+En el body debemo ingresar la siguente información del usuario:
+
+{
+  "email": "valor_email",
+  "password": "valor_password"
+}
+
+La petición nos devolverá el JSONWebToken, que necesitaremos para la siguente petición.
+
+Para obtener la información del usuario loggeado actualmente, necesitamos hacer una petición GET al la siguente ruta http://localhost:PORT/api/sessions/current. Es necesario autenticación para esta petición por lo que debemos agregar en postman el token obtenido en la petición anterior, para ellos debemos ingresar a "Authorization" en postman y seleccionar "Bearer token" y pegar el obtenido anteriormente.
+
+
+
+
+
+
+
