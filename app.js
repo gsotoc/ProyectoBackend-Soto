@@ -13,6 +13,9 @@ import connectDB from './src/services/db.js';
 import { fileURLToPath } from 'url';
 import { webSockets } from './src/sockets/webSockets.js';
 import { cartExists, addCartToLocals } from './src/middleware/cartMiddleware.js';
+import passport from 'passport';
+import { initializePassport } from "./src/config/passport.config.js";
+import sessionsRouter from "./src/routes/sessionRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,14 +48,19 @@ app.use(session({
   })
 );
 
+initializePassport();
+
 //Uso del middleware para asegurar la creacion carrito y agregar cartId a locals
 app.use(cartExists);
 app.use(addCartToLocals);
+app.use(passport.initialize());
 
 // Vistas
 app.use('/products', productsRouter);
 app.use('/realtimeproducts', productsRouter);
 app.use('/carts', cartsRouter);
+app.use("/api/sessions", sessionsRouter);
+
 
 
 webSockets(io, productManager);
