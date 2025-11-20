@@ -10,11 +10,11 @@
   <nav class="navbar">
         <div class="navbar-container">
             <div>
-                <a href="/">Voler a inicio</a>
+                <a href="/products">Volver a inicio</a>
             </div>
-            <div class="navbar-nav">
+            {{!-- <div class="navbar-nav">
                 <a href="/realtimeproducts" class="nav-link">Tiempo Real</a>
-            </div>
+            </div> --}}
         </div>
     </nav>
 
@@ -42,7 +42,7 @@
       <div class="product-info product-stock"><strong>Stock:</strong> {{product.stock}} unidades</div>
       <div class="product-info"><strong>Estado:</strong> {{#if product.status}}Disponible{{else}}No disponible{{/if}}</div>
 
-      <a href="/" >
+      <a href="/products" >
        <button>Volver a inicio</button>
       </a>  
     </div>

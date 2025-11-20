@@ -1,15 +1,18 @@
-import express from 'express';
-import * as controller from '../controllers/productController.js';
+import { Router } from "express";
+import ProductDao from "../dao/ProductDao.js";
+import ProductRepository from "../repositories/ProductRepository.js";
+import ProductController from "../controllers/ProductController.js";
 
-const router = express.Router();
+const router = Router();
 
-router.get('/', controller.get);
-router.get('/realtimeproducts', controller.getAll); //ruta pa websockets, tiene que estar antes de la de :pid sino la toma como id
-router.get('/:pid', controller.getById);
-router.post('/', controller.create);
-router.put('/:pid', controller.update);
-router.delete('/:pid', controller.deleteProduct); 
+const dao = new ProductDao();
+const repository = new ProductRepository(dao);
+const controller = new ProductController(repository);
 
-
+router.get("/", controller.getProducts);
+router.get("/:pid", controller.getProductById);
+router.post("/", controller.addProduct);
+router.put("/:pid", controller.updateProduct);
+router.delete("/:pid", controller.deleteProduct);
 
 export default router;

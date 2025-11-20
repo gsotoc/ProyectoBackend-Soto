@@ -55,7 +55,7 @@
           <h2>Resumen del Pedido</h2>
           <div class="summary-line">
             <span>Total de productos:</span>
-            <span>{{cart.products.length}}</span>
+            <span>{{countCartItems cart}}</span>
           </div>
           <div class="summary-line total">
             <span>Total:</span>
@@ -68,11 +68,11 @@
     {{else}}
       <div class="empty-cart">
         <p>Tu carrito está vacío</p>
-        <a href="/" class="btn-continue">Continuar Comprando</a>
+        <a href="/products" class="btn-continue">Continuar Comprando</a>
       </div>
     {{/if}}
 
-    <a href="/" class="btn-back">← Volver a productos</a>
+    <a href="/products" class="btn-back">← Volver a productos</a>
   </div>
   <script>
     const cartId = "{{cartId}}";

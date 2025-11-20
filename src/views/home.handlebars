@@ -56,9 +56,10 @@
                 </div>
             {{/if}}
 
-            <div class="navbar-nav">
+            {{!-- Websockets no está en uso actualmente --}}
+            {{!-- <div class="navbar-nav">
                 <a href="/realtimeproducts" class="nav-link">Tiempo Real</a>
-            </div>
+            </div> --}}
 
         </div>
     </nav>
@@ -109,7 +110,7 @@
                 <span class="product-category">{{this.category}}</span>
 
                 <div class="product-actions">
-                    <a href="/{{this._id}}">
+                    <a href="products/{{this._id}}">
                         <button class="go-details">Ver detalles</button>
                     </a>
                     <button class="go-cart" data-product-id="{{this._id}}">

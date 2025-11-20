@@ -1,16 +1,24 @@
 {
   "name": "proyectoback1",
   "version": "1.0.0",
-  "main": "app.js",
+  "description": "Este proyecto es una aplicación backend construida con **Node.js**, utilizando **Express**, **Handlebars** para las vistas y **Socket.io** para la comunicación en tiempo real.",
+  "keywords": [],
+  "homepage": "https://github.com/gsotoc/ProyectoBackend-Soto#readme",
+  "bugs": {
+    "url": "https://github.com/gsotoc/ProyectoBackend-Soto/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gsotoc/ProyectoBackend-Soto.git"
+  },
+  "license": "ISC",
+  "author": "",
   "type": "module",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.1",

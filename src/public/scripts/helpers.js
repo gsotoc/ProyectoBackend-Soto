@@ -23,3 +23,9 @@ export const calculateTotal = (products) => {
   
   return total.toFixed(2);
 };
+
+export function countCartItems(cart) {
+  if (!cart || !cart.products) return 0;
+  
+  return cart.products.reduce((total, item) => total + item.quantity, 0);
+}
