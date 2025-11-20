@@ -1,21 +1,24 @@
-// src/middleware/cartMiddleware.js
-import CartManagerMongo from "../dao/cartManager.js";
+// ✅ Usar la misma estructura que en CartsRouter.js
+import CartDao from "../dao/CartDao.js";
+import CartRepository from "../repositories/CartRepository.js";
 
-const cartManager = new CartManagerMongo();
+const dao = new CartDao();
+const cartRepository = new CartRepository(dao);
 
 export const cartExists = async (req, res, next) => {
   try {
     // Si ya existe un carrito en la sesión, verificar que existe en la BD
     if (req.session.cartId) {
       try {
-        await cartManager.getCartById(req.session.cartId);
+        await cartRepository.getCartById(req.session.cartId);
         return next();
       } catch (error) {
         console.log('Carrito de sesión no encontrado en BD, creando uno nuevo.');
       }
     }
 
-    const newCart = await cartManager.createCart();
+    // Crear nuevo carrito
+    const newCart = await cartRepository.createCart();
     req.session.cartId = newCart._id.toString();
     
     console.log('Nuevo carrito creado:', req.session.cartId);
@@ -25,7 +28,6 @@ export const cartExists = async (req, res, next) => {
     next();
   }
 };
-
 
 export const addCartToLocals = (req, res, next) => {
   res.locals.cartId = req.session.cartId || null;

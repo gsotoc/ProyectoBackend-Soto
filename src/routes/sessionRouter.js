@@ -16,7 +16,6 @@ router.post(
   }
 );
 
-// Login con JWT
 router.post(
   "/login",
   passport.authenticate("login", { session: false }),

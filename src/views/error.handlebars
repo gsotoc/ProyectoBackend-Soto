@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="./styles/home.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+
+            <div class="navbar-filters">
+                <div class="filter-group">
+                    <label for="category-filter">Categoría:</label>
+                    <select id="category-filter" class="filter-select">
+                        <option value="">Todas</option>
+                        <option value="Autos">Autos</option>
+                        <option value="Motos">Motos</option>
+                        <option value="Camionetas">Camionetas</option>
+                        <option value="SUV">SUV</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Precio:</label>
+                    <button id="price-asc" class="filter-btn">
+                        ↑ Menor
+                    </button>
+                    <button id="price-desc" class="filter-btn">
+                        ↓ Mayor
+                    </button>
+                </div>
+
+                <div class="filter-group">
+                    <label for="search-input">Buscar:</label>
+                    <input type="text" id="search-input" class="filter-input" placeholder="Buscar productos..."/>
+                </div>
+
+                <button id="toggle-available" class="btn-toggle-available">
+                     Mostrar Disponibles
+                </button>
+
+                <button class="go-btn" >
+                    Ir
+                </button>
+
+                <button class="clear-filters">
+                    Limpiar
+                </button>
+            </div>
+
+            {{#if cartId}}
+                <div class="navbar-cart">
+                    <a href="/carts/{{cartId}}" class="nav-link">🛒 Carrito</a>
+                </div>
+            {{/if}}
+
+            {{!-- Websockets no está en uso actualmente --}}
+            {{!-- <div class="navbar-nav">
+                <a href="/realtimeproducts" class="nav-link">Tiempo Real</a>
+            </div> --}}
+
+        </div>
+    </nav>
+    <h1>{{title}}</h1>
+    <p>{{message}}</p>
+    <script>
+        window.cartId = "{{cartId}}";
+    </script>
+    <script src="/scripts/home.js"></script>
+</body>
+</html>

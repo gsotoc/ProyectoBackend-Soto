@@ -1,21 +1,22 @@
 import express from 'express';
 import { engine } from 'express-handlebars';
 import session from 'express-session';
+import { Server } from 'socket.io';
 import * as helpers from './src/public/scripts/helpers.js';
-import productsRouter from './src/routes/productsRouter.js';
-import cartsRouter from './src/routes/cartsRouter.js';
+import ProductsRouter from './src/routes/ProductsRouter.js';
+import CartsRouter from './src/routes/CartsRouter.js';
 import { PORT } from './src/config/config.js';
-import ProductManager from './src/dao/ProductManager.js';
 import path from 'path';
 import http from 'http';
-import { Server } from 'socket.io';
 import connectDB from './src/services/db.js';
 import { fileURLToPath } from 'url';
-import { webSockets } from './src/sockets/webSockets.js';
 import { cartExists, addCartToLocals } from './src/middleware/cartMiddleware.js';
 import passport from 'passport';
 import { initializePassport } from "./src/config/passport.config.js";
 import sessionsRouter from "./src/routes/sessionRouter.js";
+// import { webSockets } from './src/sockets/webSockets.js'; No está en uso actualmente
+//import ProductRepository from './src/repositories/ProductRepository.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,7 +26,6 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 connectDB();
-const productManager = new ProductManager();
 
 // Handlebars
 app.engine(
@@ -56,14 +56,13 @@ app.use(addCartToLocals);
 app.use(passport.initialize());
 
 // Vistas
-app.use('/products', productsRouter);
-app.use('/realtimeproducts', productsRouter);
-app.use('/carts', cartsRouter);
+app.use('/products', ProductsRouter);
+app.use('/realtimeproducts', ProductsRouter);
+app.use('/carts', CartsRouter);
 app.use("/api/sessions", sessionsRouter);
 
 
-
-webSockets(io, productManager);
+// webSockets(io, ProductRepository); //No está en uso actualmente
 
 server.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}/products`);
