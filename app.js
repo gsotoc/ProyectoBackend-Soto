@@ -3,8 +3,8 @@ import { engine } from 'express-handlebars';
 import session from 'express-session';
 import { Server } from 'socket.io';
 import * as helpers from './src/public/scripts/helpers.js';
-import ProductsRouter from './src/routes/ProductsRouter.js';
-import CartsRouter from './src/routes/CartsRouter.js';
+import ProductsRouter from './src/routes/productsRouter.js';
+import CartsRouter from './src/routes/cartsRouter.js';
 import { PORT } from './src/config/config.js';
 import path from 'path';
 import http from 'http';
@@ -14,6 +14,8 @@ import { cartExists, addCartToLocals } from './src/middleware/cartMiddleware.js'
 import passport from 'passport';
 import { initializePassport } from "./src/config/passport.config.js";
 import sessionsRouter from "./src/routes/sessionRouter.js";
+import cookieParser from "cookie-parser";
+
 // import { webSockets } from './src/sockets/webSockets.js'; No está en uso actualmente
 //import ProductRepository from './src/repositories/ProductRepository.js';
 
@@ -39,6 +41,7 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'src', 'views'));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'src', 'public')));
 app.use(session({
   secret: "lo-usare-para-crear-un-carrito-por-sesion",
@@ -47,6 +50,8 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 30 } 
   })
 );
+app.use(cookieParser());
+
 
 initializePassport();
 

@@ -65,6 +65,6 @@ class CartDao {
       { new: true }
     ).populate("products.productId");  
   }
-};
+}
 
 export default CartDao;

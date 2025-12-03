@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
-
-const JWT_SECRET = "miClaveSecreta";
+import { JWT_SECRET } from "../config/config.js";
 
 export const generateToken = (user) => {
   return jwt.sign(

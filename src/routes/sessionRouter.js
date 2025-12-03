@@ -1,51 +1,37 @@
 import { Router } from "express";
 import passport from "passport";
-import { generateToken } from "../utils/JwtHelper.js";
+import {
+  renderRegister,
+  renderLogin,
+  registerUser,
+  loginUser,
+  getCurrentUser
+} from "../controllers/sessionsController.js";
+import { requireAuth } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
+router.get("/register", renderRegister);
+router.get("/login", renderLogin);
 
 router.post(
   "/register",
-  passport.authenticate("register", { session: false }),
-  (req, res) => {
-    res.status(201).send({
-      status: "success",
-      message: "Usuario registrado correctamente"
-    });
-  }
+  passport.authenticate("register", {
+    session: false,
+    failureRedirect: "/api/sessions/register?error=user_exists"
+  }),
+  registerUser
 );
 
 router.post(
   "/login",
-  passport.authenticate("login", { session: false }),
-  (req, res) => {
-    const user = req.user;
-    const token = generateToken(user);
-    res.send({
-      status: "success",
-      message: "Login exitoso",
-      token
-    });
-  }
+  passport.authenticate("login", {
+    session: false,
+    failureRedirect: "/api/sessions/login?error=1"
+  }),
+  loginUser
 );
 
-// Ruta protegida /current
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.send({
-      status: "success",
-      user: {
-        id: req.user._id,
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        role: req.user.role
-      }
-    });
-  }
-);
+router.get("/current", requireAuth, getCurrentUser);
 
 export default router;
