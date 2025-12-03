@@ -103,6 +103,7 @@ body {
     transform: translateY(-2px);
 }
 
+
 .no-products {
     text-align: center;
     color: #666;
@@ -118,3 +119,9 @@ body {
     margin-bottom: 10px;
 }
 
+/*Estilos login*/
+.login-form {
+    display: flex;
+    width: 50%;
+
+}

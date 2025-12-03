@@ -1,12 +1,24 @@
 import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import local from "passport-local";
+import jwt from "passport-jwt";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
+import { JWT_SECRET } from "./config.js";
 
-const JWT_SECRET = "miClaveSecreta"; 
+const LocalStrategy = local.Strategy;
+const JwtStrategy = jwt.Strategy;
+
+const cookieExtractor = req => {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies.token;
+  }
+  return token;
+};
 
 export const initializePassport = () => {
+
+  // ---------- REGISTER ----------
   passport.use(
     "register",
     new LocalStrategy(
@@ -14,30 +26,31 @@ export const initializePassport = () => {
       async (req, email, password, done) => {
         try {
           const { first_name, last_name, age } = req.body;
-          const userExists = await User.findOne({ email });
 
-          if (userExists) {
-            return done(null, false, { message: "El usuario ya existe" });
+          const existingUser = await User.findOne({ email });
+          if (existingUser) {
+            return done(null, false, { message: "USER_EXISTS" });
           }
 
-          const newUser = new User({
+          const newUser = await User.create({
             first_name,
             last_name,
             email,
             age,
-            password 
+            password: password
           });
-
-          await newUser.save();
+          
           return done(null, newUser);
-        } catch (err) {
-          return done(err);
+        } catch (error) {
+          
+          console.log("❌ ERROR REGISTER:", error);
+          return done(error);
         }
       }
     )
   );
 
- 
+  // ---------- LOGIN ----------
   passport.use(
     "login",
     new LocalStrategy(
@@ -45,34 +58,35 @@ export const initializePassport = () => {
       async (email, password, done) => {
         try {
           const user = await User.findOne({ email });
-          if (!user) return done(null, false, { message: "Usuario no encontrado" });
+          if (!user) return done(null, false);
 
           const isValid = bcrypt.compareSync(password, user.password);
-          if (!isValid)
-            return done(null, false, { message: "Contraseña incorrecta" });
+          if (!isValid) return done(null, false);
 
           return done(null, user);
-        } catch (err) {
-          return done(err);
+        } catch (error) {
+          return done(error);
         }
       }
     )
   );
 
+  // ---------- JWT ----------
   passport.use(
     "jwt",
     new JwtStrategy(
       {
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]), // ✅ CLAVE
         secretOrKey: JWT_SECRET
       },
       async (jwt_payload, done) => {
         try {
           const user = await User.findById(jwt_payload.id);
           if (!user) return done(null, false);
+
           return done(null, user);
-        } catch (err) {
-          return done(err, false);
+        } catch (error) {
+          return done(error);
         }
       }
     )

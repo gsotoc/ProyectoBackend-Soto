@@ -1,36 +1,35 @@
-import Product from "../models/Products.js"; // ✅ AGREGAR ESTA IMPORTACIÓN
-
 class CartRepository {
-  constructor(dao) {
-    this.dao = dao;
+  constructor(cartDao, productRepository) {
+    this.cartDao = cartDao;
+    this.productRepository = productRepository;
   }
 
   validateId(id, name = "ID") {
-    if (!this.dao.isValidId(id)) {
+    if (!this.cartDao.isValidId(id)) {
       throw new Error(`${name} inválido`);
     }
   }
 
   async getCarts() {
-    return this.dao.getCarts();
+    return this.cartDao.getCarts();
   }
 
   async createCart(products = []) {
-    // Validar que los productos existan
+    // Validar que los productos existan usando ProductRepository
     for (const p of products) {
       this.validateId(p.productId, "ID de producto");
-
-      const exists = await Product.findById(p.productId);
-      if (!exists) throw new Error(`Producto no encontrado: ${p.productId}`);
+      
+      // ✅ Usar ProductRepository en lugar del modelo
+      await this.productRepository.getProductById(p.productId);
     }
 
-    return this.dao.createCart(products);
+    return this.cartDao.createCart(products);
   }
 
   async getCartById(cartId) {
     this.validateId(cartId, "ID de carrito");
 
-    const cart = await this.dao.getCartById(cartId);
+    const cart = await this.cartDao.getCartById(cartId);
     if (!cart) throw new Error("Carrito no encontrado");
 
     return cart;
@@ -41,26 +40,26 @@ class CartRepository {
 
     for (const p of newProducts) {
       this.validateId(p.productId, "ID de producto");
-      const exists = await Product.findById(p.productId);
-      if (!exists) throw new Error(`Producto no encontrado: ${p.productId}`);
+      
+      // ✅ Usar ProductRepository
+      await this.productRepository.getProductById(p.productId);
     }
 
-    return this.dao.updateCart(cartId, newProducts);
+    return this.cartDao.updateCart(cartId, newProducts);
   }
 
   async addProductToCart(cartId, productId, quantity = 1) {
     this.validateId(cartId, "ID de carrito");
     this.validateId(productId, "ID de producto");
 
-    // ✅ Verificar que el producto existe
-    const productExists = await Product.findById(productId);
-    if (!productExists) throw new Error("Producto no encontrado");
+    // ✅ Verificar que el producto existe usando ProductRepository
+    await this.productRepository.getProductById(productId);
 
-    // ✅ Obtener el carrito
-    const cart = await this.dao.getCartDocument(cartId);
+    // Obtener el carrito
+    const cart = await this.cartDao.getCartDocument(cartId);
     if (!cart) throw new Error("Carrito no encontrado");
 
-    // ✅ Buscar si el producto ya está en el carrito
+    // Buscar si el producto ya está en el carrito
     const idx = cart.products.findIndex(
       p => p.productId.toString() === productId
     );
@@ -75,7 +74,7 @@ class CartRepository {
 
     cart.updatedAt = new Date();
     
-    // ✅ Guardar y hacer populate
+    // Guardar y hacer populate
     await cart.save();
     return cart.populate("products.productId");
   }
@@ -84,7 +83,7 @@ class CartRepository {
     this.validateId(cartId, "ID de carrito");
     this.validateId(productId, "ID de producto");
 
-    return this.dao.deleteProduct(cartId, productId);
+    return this.cartDao.deleteProduct(cartId, productId);
   }
 
   async updateProductQuantity(cartId, productId, quantity) {
@@ -93,7 +92,7 @@ class CartRepository {
 
     if (quantity <= 0) throw new Error("La cantidad debe ser mayor a 0");
 
-    const cart = await this.dao.getCartDocument(cartId);
+    const cart = await this.cartDao.getCartDocument(cartId);
     if (!cart) throw new Error("Carrito no encontrado");
 
     const idx = cart.products.findIndex(
@@ -113,7 +112,7 @@ class CartRepository {
   async clearCart(cartId) {
     this.validateId(cartId, "ID de carrito");
 
-    return this.dao.clearCart(cartId);
+    return this.cartDao.clearCart(cartId);
   }
 }
 

@@ -1,4 +1,3 @@
-// ✅ Usar la misma estructura que en CartsRouter.js
 import CartDao from "../dao/CartDao.js";
 import CartRepository from "../repositories/CartRepository.js";
 
