@@ -9,14 +9,14 @@ import {
   getCurrentUser
 } from "../controllers/sessionsController.js";
 import { requireAuth } from "../middleware/authenticationMiddleware.js";
+import { validateRegister } from "../middleware/validation.register.js";
 
 const router = Router();
 
 router.get("/register", renderRegister);
 router.get("/login", renderLogin);
 
-router.post(
-  "/register",
+router.post("/register", validateRegister,
   passport.authenticate("register", {
     session: false,
     failureRedirect: "/api/sessions/register?error=user_exists"
@@ -42,5 +42,13 @@ router.get("/current", requireAuth, getCurrentUser, (req, res) => {
 });
 
 router.post("/logout", logoutUser);
+
+router.get("/forgot-password", (req, res) => {
+  res.render("forgot-password");
+});
+
+router.get("/reset-password", (req, res) => {
+  res.render("reset-password");
+});
 
 export default router;
