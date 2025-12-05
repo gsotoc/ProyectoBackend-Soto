@@ -36,6 +36,12 @@ export const loginUser = async (req, res) => {
   res.redirect("/products");
 };
 
+export const logoutUser = (req, res) => {
+  res.clearCookie("token");
+  
+  return res.redirect("/api/sessions/login");
+  }
+
 export const getCurrentUser = async (req, res) => {
   res.render("profile", {
     user: {

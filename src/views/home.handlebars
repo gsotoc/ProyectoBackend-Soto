@@ -9,9 +9,22 @@
 <body>
     <nav class="navbar">
         <div class="navbar-container">
-            <div class="navbar-nav">
-                <a href="/api/sessions/login" class="nav-link login-link">Login</a>
-            </div>
+
+            {{#if user}}
+                <span>Bienvenido {{user.first_name}}</span>
+
+                <div class="navbar-nav">
+                    <form action="/api/sessions/logout" method="POST" style="display:inline;">
+                    <button class="nav-link login-link" type="submit">Logout</button>
+                    </form>
+                </div>
+
+
+            {{else}}
+                <div class="navbar-nav">
+                    <a href="/api/sessions/login" class="nav-link login-link">Login</a>
+                </div>
+            {{/if}}
 
         </div>
         <div class="navbar-container">

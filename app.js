@@ -5,6 +5,8 @@ import { Server } from 'socket.io';
 import * as helpers from './src/public/scripts/helpers.js';
 import ProductsRouter from './src/routes/productsRouter.js';
 import CartsRouter from './src/routes/cartsRouter.js';
+import sessionsRouter from "./src/routes/sessionRouter.js";
+import usersRouter from './src/routes/userRouter.js';
 import { PORT } from './src/config/config.js';
 import path from 'path';
 import http from 'http';
@@ -13,12 +15,9 @@ import { fileURLToPath } from 'url';
 import { cartExists, addCartToLocals } from './src/middleware/cartMiddleware.js';
 import passport from 'passport';
 import { initializePassport } from "./src/config/passport.config.js";
-import sessionsRouter from "./src/routes/sessionRouter.js";
 import cookieParser from "cookie-parser";
-
-// import { webSockets } from './src/sockets/webSockets.js'; No está en uso actualmente
-//import ProductRepository from './src/repositories/ProductRepository.js';
-
+import { notFoundHandler, errorHandler } from './src/middleware/errorMiddleware.js';
+import { attachUserToViews } from './src/middleware/user.middleware.js';   
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -52,22 +51,43 @@ app.use(session({
 );
 app.use(cookieParser());
 
-
 initializePassport();
 
-//Uso del middleware para asegurar la creacion carrito y agregar cartId a locals
+// Middleware para adjuntar el usuario autenticado a las vistas
+app.use(attachUserToViews);
+
+// Uso del middleware para asegurar la creacion carrito y agregar cartId a locals
 app.use(cartExists);
 app.use(addCartToLocals);
 app.use(passport.initialize());
 
-// Vistas
+// Vistas y rutas
 app.use('/products', ProductsRouter);
 app.use('/realtimeproducts', ProductsRouter);
 app.use('/carts', CartsRouter);
 app.use("/api/sessions", sessionsRouter);
+app.use("/api/users", usersRouter);
 
+// ✅ Middleware para rutas no encontradas (debe ir DESPUÉS de todas las rutas)
+app.use(notFoundHandler);
 
-// webSockets(io, ProductRepository); //No está en uso actualmente
+// ✅ Middleware de manejo de errores (debe ser el ÚLTIMO)
+app.use(errorHandler);
+
+// ✅ Manejo de errores no capturados
+process.on('unhandledRejection', (err) => {
+  console.error('💥 UNHANDLED REJECTION! Apagando...');
+  console.error(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('💥 UNCAUGHT EXCEPTION! Apagando...');
+  console.error(err.name, err.message);
+  process.exit(1);
+});
 
 server.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}/products`);
