@@ -45,18 +45,6 @@ class UsersController {
     });
   });
 
-  // Eliminar usuario (solo admin)
-  deleteUser = asyncHandler(async (req, res) => {
-    const { uid } = req.params;
-    
-    await this.userRepository.deleteUser(uid);
-    
-    res.json({
-      status: 'success',
-      message: 'Usuario eliminado correctamente'
-    });
-  });
-
   // Obtener perfil del usuario actual
   getCurrentUser = asyncHandler(async (req, res) => {
     // req.user viene del middleware de autenticación
@@ -84,21 +72,6 @@ class UsersController {
     });
   });
 
-  // Obtener estadísticas de usuarios (solo admin)
-  getUserStats = asyncHandler(async (req, res) => {
-    const totalUsers = await this.userRepository.countUsers();
-    const totalAdmins = await this.userRepository.countUsers({ role: 'admin' });
-    const totalRegularUsers = await this.userRepository.countUsers({ role: 'user' });
-    
-    res.json({
-      status: 'success',
-      payload: {
-        total: totalUsers,
-        admins: totalAdmins,
-        users: totalRegularUsers
-      }
-    });
-  });
 }
 
 export default UsersController;
