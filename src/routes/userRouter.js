@@ -20,10 +20,6 @@ router.use(requireAuth);
 // Obtener perfil del usuario actual
 router.get('/current', controller.getCurrentUser);
 
-// Rutas solo para administradores
-router.get('/', requireRole('admin'), controller.getAllUsers);
-router.get('/stats', requireRole('admin'), controller.getUserStats);
-router.get('/role/:role', requireRole('admin'), controller.getUsersByRole);
 
 // Rutas específicas por ID
 router.get('/:uid', controller.getUserById);
