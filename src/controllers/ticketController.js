@@ -6,15 +6,6 @@ class TicketController {
     this.ticketRepository = ticketRepository;
   }
 
-  // Obtener todos los tickets (solo admin)
-  getAllTickets = asyncHandler(async (req, res) => {
-    const tickets = await this.ticketRepository.getAllTickets();
-    
-    res.json({
-      status: 'success',
-      payload: tickets
-    });
-  });
 
   // Obtener ticket por ID
   getTicketById = asyncHandler(async (req, res) => {
@@ -58,30 +49,6 @@ class TicketController {
     });
   });
 
-  // Obtener tickets de un usuario específico (solo admin)
-  getTicketsByUser = asyncHandler(async (req, res) => {
-    const { email } = req.params;
-    const tickets = await this.ticketRepository.getTicketsByPurchaser(email);
-    
-    res.json({
-      status: 'success',
-      payload: tickets
-    });
-  });
-
-  // Actualizar estado de ticket (solo admin)
-  updateTicketStatus = asyncHandler(async (req, res) => {
-    const { tid } = req.params;
-    const { status } = req.body;
-
-    const ticket = await this.ticketRepository.updateTicketStatus(tid, status);
-    
-    res.json({
-      status: 'success',
-      message: 'Estado del ticket actualizado',
-      payload: ticket
-    });
-  });
 
   // Renderizar vista de tickets del usuario
   renderMyTickets = asyncHandler(async (req, res) => {
@@ -93,7 +60,6 @@ class TicketController {
     });
   });
 
-  // ✅ CORREGIDO: Renderizar detalle de un ticket
   renderTicketDetail = asyncHandler(async (req, res) => {
     const { tid } = req.params;
     const ticket = await this.ticketRepository.getTicketById(tid);
