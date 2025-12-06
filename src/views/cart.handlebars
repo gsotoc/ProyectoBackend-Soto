@@ -62,7 +62,17 @@
             <span class="total-amount">${{cart.total}}</span>
           </div>
           <button class="btn-clear-cart">Vaciar Carrito</button>
-          <button class="btn-checkout">Finalizar Compra</button>
+          
+          <!-- Debug: Mostrar estado de usuario -->
+          {{!-- <p style="color: red;">Debug - User: {{#if user}}{{user.email}}{{else}}No user{{/if}}</p> --}}
+          
+          {{#if user}}
+            <!-- Usuario autenticado: puede ir a checkout -->
+            <a href="/carts/{{cart._id}}/checkout" class="btn-checkout">Finalizar Compra</a>
+          {{else}}
+            <!-- Usuario no autenticado: debe iniciar sesión -->
+            <a href="/api/sessions/login" class="btn-checkout">Iniciar sesión para comprar</a>
+          {{/if}}
         </div>
       </div>
     {{else}}
@@ -75,7 +85,7 @@
     <a href="/products" class="btn-back">← Volver a productos</a>
   </div>
   <script>
-    const cartId = "{{cartId}}";
+    const cartId = "{{cart._id}}";
   </script>
   <script src="/scripts/cart.js"></script>
 </body>

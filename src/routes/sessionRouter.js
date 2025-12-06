@@ -10,13 +10,32 @@ import {
 } from "../controllers/sessionsController.js";
 import { requireAuth } from "../middleware/authenticationMiddleware.js";
 import { validateRegister } from "../middleware/validation.register.js";
+import {
+  renderForgotPassword,
+  requestPasswordReset,
+  renderResetPassword,
+  resetPassword
+} from "../controllers/passwordRecoveryController.js";
+import { loginLimiter, registerLimiter, passwordRecoveryLimiter, passwordResetLimiter } from '../middleware/rateLimitMiddleware.js';
 
 const router = Router();
 
+// ============ RUTAS DE VISTAS (GET) ============
+
 router.get("/register", renderRegister);
 router.get("/login", renderLogin);
+router.get("/forgot-password", renderForgotPassword);
+router.get("/reset-password", renderResetPassword);
 
-router.post("/register", validateRegister,
+// Perfil del usuario actual (requiere autenticación)
+router.get("/current", requireAuth, getCurrentUser);
+
+// ============ RUTAS DE PROCESAMIENTO (POST) ============
+
+// Registro
+router.post("/register", 
+  validateRegister, 
+  registerLimiter,
   passport.authenticate("register", {
     session: false,
     failureRedirect: "/api/sessions/register?error=user_exists"
@@ -24,8 +43,9 @@ router.post("/register", validateRegister,
   registerUser
 );
 
-router.post(
-  "/login",
+// Login
+router.post("/login", 
+  loginLimiter,
   passport.authenticate("login", {
     session: false,
     failureRedirect: "/api/sessions/login?error=1"
@@ -33,22 +53,11 @@ router.post(
   loginUser
 );
 
-router.get("/current", requireAuth, getCurrentUser, (req, res) => {
-  const userDTO = new UserDTO(req.user);
-
-  res.render("profile", {
-    user: userDTO
-  });
-});
-
+// Logout
 router.post("/logout", logoutUser);
 
-router.get("/forgot-password", (req, res) => {
-  res.render("forgot-password");
-});
-
-router.get("/reset-password", (req, res) => {
-  res.render("reset-password");
-});
+// Recuperación de contraseña
+router.post("/forgot-password", passwordRecoveryLimiter, requestPasswordReset);
+router.post("/reset-password", passwordResetLimiter, resetPassword);
 
 export default router;

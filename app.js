@@ -18,6 +18,7 @@ import { initializePassport } from "./src/config/passport.config.js";
 import cookieParser from "cookie-parser";
 import { notFoundHandler, errorHandler } from './src/middleware/errorMiddleware.js';
 import { attachUserToViews } from './src/middleware/user.middleware.js';   
+import ticketsRouter from './src/routes/ticketsRouter.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -67,6 +68,9 @@ app.use('/realtimeproducts', ProductsRouter);
 app.use('/carts', CartsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/users", usersRouter);
+app.use('/api/tickets', ticketsRouter);
+
+
 
 // ✅ Middleware para rutas no encontradas (debe ir DESPUÉS de todas las rutas)
 app.use(notFoundHandler);

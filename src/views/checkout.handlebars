@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 30px; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .alert-warning { background: #fff3cd; border: 1px solid #ffc107; color: #856404; }
+        .products-list { margin-bottom: 30px; }
+        .product-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
+        .product-info h3 { color: #333; margin-bottom: 5px; }
+        .product-info p { color: #666; font-size: 14px; }
+        .product-price { text-align: right; }
+        .product-price .quantity { color: #666; font-size: 14px; }
+        .product-price .subtotal { font-size: 18px; font-weight: bold; color: #28a745; }
+        .summary { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .summary-row.total { font-size: 24px; font-weight: bold; color: #333; border-top: 2px solid #333; padding-top: 15px; margin-top: 15px; }
+        .btn { padding: 15px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-primary:hover { background: #0056b3; }
+        .btn-secondary { background: #6c757d; color: white; margin-left: 10px; }
+        .btn-secondary:hover { background: #545b62; }
+        .actions { display: flex; gap: 10px; margin-top: 20px; }
+        .loading { display: none; text-align: center; padding: 20px; }
+        .loading.active { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{title}}</h1>
+
+        {{#if summary.hasWarnings}}
+        <div class="alert alert-warning">
+            <strong>⚠️ Advertencia:</strong> Algunos productos no tienen stock suficiente:
+            <ul>
+                {{#each summary.stockWarnings}}
+                <li>{{this.title}}: Solicitaste {{this.requested}}, solo hay {{this.available}} disponibles</li>
+                {{/each}}
+            </ul>
+        </div>
+        {{/if}}
+
+        <div class="products-list">
+            <h2>Productos en tu carrito:</h2>
+            {{#each cart.products}}
+            <div class="product-item">
+                <div class="product-info">
+                    <h3>{{this.productId.title}}</h3>
+                    <p>Código: {{this.productId.code}}</p>
+                    <p>Precio unitario: ${{this.productId.price}}</p>
+                </div>
+                <div class="product-price">
+                    <p class="quantity">Cantidad: {{this.quantity}}</p>
+                    <p class="subtotal">${{this.subtotal}}</p>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="summary">
+            <h2>Resumen de compra</h2>
+            <div class="summary-row">
+                <span>Total de productos:</span>
+                <span>{{summary.totalItems}}</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total a pagar:</span>
+                <span>${{summary.total}}</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="finalizePurchase()">Finalizar Compra</button>
+            <a href="/carts/{{cart._id}}" class="btn btn-secondary">Volver al Carrito</a>
+        </div>
+
+        <div class="loading" id="loading">
+            <p>Procesando compra...</p>
+        </div>
+    </div>
+
+    <!-- ✅ SOLUCIÓN: Pasar el cartId como variable global -->
+    <script>
+        // Variable global con el ID del carrito
+        const cartId = "{{cart._id}}";
+    </script>
+    
+    <!-- Cargar el archivo externo DESPUÉS de definir cartId -->
+    <script src="/scripts/checkout.js"></script>
+</body>
+</html>
