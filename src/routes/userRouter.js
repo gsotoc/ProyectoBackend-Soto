@@ -5,8 +5,6 @@ import UserDAO from '../dao/UserDao.js';
 import UserRepository from '../repositories/UserRepository.js';
 import UsersController from '../controllers/UsersController.js';
 import { requireAuth, requireRole } from '../middleware/authenticationMiddleware.js';
- 
-
 
 const router = Router();
 
@@ -24,6 +22,5 @@ router.get('/current', controller.getCurrentUser);
 // Rutas específicas por ID
 router.get('/:uid', controller.getUserById);
 router.put('/:uid', controller.updateUser);
-router.delete('/:uid', requireRole('admin'), controller.deleteUser);
 
 export default router;
