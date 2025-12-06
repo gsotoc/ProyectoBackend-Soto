@@ -5,6 +5,8 @@ import UserDAO from '../dao/UserDao.js';
 import UserRepository from '../repositories/UserRepository.js';
 import UsersController from '../controllers/UsersController.js';
 import { requireAuth, requireRole } from '../middleware/authenticationMiddleware.js';
+ 
+
 
 const router = Router();
 

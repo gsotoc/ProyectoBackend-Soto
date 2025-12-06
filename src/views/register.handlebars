@@ -70,7 +70,23 @@
     </div>
 
     {{#if error}}
-      <p>{{error}}</p>
+      <div class="alert alert-error">
+        {{#if (eq error "user_exists")}}
+          El usuario ya está registrado. <a href="/api/sessions/login">Inicia sesión aquí</a>
+        {{else if (eq error "too_many_attempts")}}
+          Demasiados intentos de registro desde esta ubicación. Por tu seguridad, espera 1 hora antes de intentar nuevamente.
+        {{else}}
+          Ocurrió un error al registrarse. Inténtalo nuevamente.
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if success}}
+      <div class="alert alert-success">
+        {{#if (eq success "registered")}}
+          ✅ Registro exitoso. Ya puedes <a href="/api/sessions/login">iniciar sesión</a>.
+        {{/if}}
+      </div>
     {{/if}}
 
     {{#if success}}
