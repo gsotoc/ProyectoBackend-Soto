@@ -31,21 +31,6 @@ class ProductDTO {
     return products.map(product => new ProductDTO(product));
   }
 
-  // DTO simplificado para listados (sin descripción completa)
-  static toListDTO(product) {
-    return {
-      id: product._id || product.id,
-      title: product.title,
-      code: product.code,
-      price: product.price,
-      stock: product.stock,
-      category: product.category,
-      thumbnails: product.thumbnails?.[0] || null, // Solo la primera imagen
-      availability: new ProductDTO(product).availability
-    };
-  }
-
-  // DTO para carrito (solo info necesaria)
   static toCartDTO(product) {
     return {
       id: product._id || product.id,
