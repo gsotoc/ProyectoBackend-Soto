@@ -18,7 +18,7 @@ const cookieExtractor = req => {
 
 export const initializePassport = () => {
 
-  // ---------- REGISTER ----------
+  
   passport.use(
     "register",
     new LocalStrategy(
@@ -50,7 +50,7 @@ export const initializePassport = () => {
     )
   );
 
-  // ---------- LOGIN ----------
+ 
   passport.use(
     "login",
     new LocalStrategy(
@@ -71,12 +71,12 @@ export const initializePassport = () => {
     )
   );
 
-  // ---------- JWT ----------
+  
   passport.use(
     "jwt",
     new JwtStrategy(
       {
-        jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]), // ✅ CLAVE
+        jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]), 
         secretOrKey: JWT_SECRET
       },
       async (jwt_payload, done) => {
