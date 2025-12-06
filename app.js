@@ -71,28 +71,10 @@ app.use("/api/users", usersRouter);
 app.use('/api/tickets', ticketsRouter);
 
 
-
-// ✅ Middleware para rutas no encontradas (debe ir DESPUÉS de todas las rutas)
 app.use(notFoundHandler);
-
-// ✅ Middleware de manejo de errores (debe ser el ÚLTIMO)
 app.use(errorHandler);
-
-// ✅ Manejo de errores no capturados
-process.on('unhandledRejection', (err) => {
-  console.error('💥 UNHANDLED REJECTION! Apagando...');
-  console.error(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
-  });
-});
-
-process.on('uncaughtException', (err) => {
-  console.error('💥 UNCAUGHT EXCEPTION! Apagando...');
-  console.error(err.name, err.message);
-  process.exit(1);
-});
 
 server.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}/products`);
+
 });
