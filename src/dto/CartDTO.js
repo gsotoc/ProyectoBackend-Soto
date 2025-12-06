@@ -36,16 +36,7 @@ class CartDTO {
     return new CartDTO(cart);
   }
 
-  // DTO simplificado (solo IDs, para respuestas rápidas)
-  static toSimpleDTO(cart) {
-    return {
-      id: cart._id || cart.id,
-      totalItems: new CartDTO(cart).totalItems,
-      total: new CartDTO(cart).total
-    };
-  }
 
-  // DTO para checkout (con toda la info necesaria)
   static toCheckoutDTO(cart) {
     const cartDTO = new CartDTO(cart);
     return {
